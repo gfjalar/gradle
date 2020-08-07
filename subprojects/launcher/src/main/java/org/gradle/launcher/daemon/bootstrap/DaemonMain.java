@@ -15,6 +15,7 @@
  */
 package org.gradle.launcher.daemon.bootstrap;
 
+import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import org.gradle.api.UncheckedIOException;
 import org.gradle.api.logging.LogLevel;
@@ -48,6 +49,7 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -164,9 +166,11 @@ public class DaemonMain extends EntryPoint {
         try {
             Files.createParentDirs(daemonLog);
             result = new PrintStream(new FileOutputStream(daemonLog), true);
+            java.nio.file.Files.setPosixFilePermissions(daemonLog.toPath(), Sets.newHashSet(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE));
         } catch (Exception e) {
             throw new RuntimeException("Unable to create daemon log file", e);
         }
+
         final PrintStream log = result;
 
         ShutdownHooks.addShutdownHook(new Runnable() {

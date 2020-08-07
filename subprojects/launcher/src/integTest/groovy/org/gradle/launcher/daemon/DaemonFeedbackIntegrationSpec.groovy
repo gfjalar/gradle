@@ -21,6 +21,7 @@ import org.gradle.integtests.fixtures.daemon.DaemonIntegrationSpec
 import org.gradle.integtests.fixtures.timeout.IntegrationTestTimeout
 import org.gradle.launcher.daemon.logging.DaemonMessages
 import org.gradle.test.fixtures.file.LeaksFileHandles
+import org.gradle.test.fixtures.file.TestFile
 import org.gradle.util.GradleVersion
 import org.gradle.util.Requires
 import org.gradle.util.TestPrecondition
@@ -160,6 +161,23 @@ task sleep {
         log.count('lifecycle me!') == 0
         log.count('warn me!') == 0
         log.count('error me!') == 1
+    }
+
+    def "daemon log restricts permissions to owner"() {
+        given:
+        file("build.gradle") << """
+        """
+
+        when:
+        executer.withArguments("-q").run()
+
+        then:
+        def log = firstLog(executer.daemonBaseDir)
+        assertLogIsOnlyVisibleToOwner(log)
+    }
+
+    void assertLogIsOnlyVisibleToOwner(File logFile) {
+        assert new TestFile(logFile).permissions == "rw-------"
     }
 
     //Java 9 and above needs --add-opens to make environment variable mutation work
