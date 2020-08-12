@@ -88,7 +88,7 @@ class DefaultScriptHandlerTest extends Specification {
 
         then:
         0 * configuration._
-        1 * classpathResolver.resolveClassPath(null) >> ClassPath.EMPTY
+        1 * classpathResolver.resolveClassPath(null, configContainer) >> ClassPath.EMPTY
 
         and:
         classpath == ClassPath.EMPTY
@@ -111,7 +111,7 @@ class DefaultScriptHandlerTest extends Specification {
         1 * attributes.attribute(Usage.USAGE_ATTRIBUTE, _ as Usage)
         1 * attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, _)
         1 * attributes.attribute(Bundling.BUNDLING_ATTRIBUTE, _ as Bundling)
-        1 * classpathResolver.resolveClassPath(configuration) >> classpath
+        1 * classpathResolver.resolveClassPath(configuration, configContainer) >> classpath
     }
 
     def "can configure repositories"() {

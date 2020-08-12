@@ -85,7 +85,11 @@ public class DefaultScriptHandler implements ScriptHandler, ScriptHandlerInterna
 
     @Override
     public ClassPath getScriptClassPath() {
-        return scriptClassPathResolver.resolveClassPath(classpathConfiguration);
+        Configuration excludedFromClasspathConfiguration = null;
+        if (configContainer!=null && dependencyHandler!=null) {
+            excludedFromClasspathConfiguration = configContainer.detachedConfiguration(dependencyHandler.gradleApi(), dependencyHandler.gradleTestKit(), dependencyHandler.localGroovy());
+        }
+        return scriptClassPathResolver.resolveClassPath(classpathConfiguration, excludedFromClasspathConfiguration);
     }
 
     @Override

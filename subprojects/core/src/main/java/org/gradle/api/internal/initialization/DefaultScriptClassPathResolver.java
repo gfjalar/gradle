@@ -19,7 +19,9 @@ import org.gradle.api.artifacts.Configuration;
 import org.gradle.internal.classpath.ClassPath;
 import org.gradle.internal.classpath.DefaultClassPath;
 
+import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 public class DefaultScriptClassPathResolver implements ScriptClassPathResolver {
     private final List<ScriptClassPathInitializer> initializers;
@@ -29,13 +31,19 @@ public class DefaultScriptClassPathResolver implements ScriptClassPathResolver {
     }
 
     @Override
-    public ClassPath resolveClassPath(Configuration classpathConfiguration) {
+    public ClassPath resolveClassPath(Configuration classpathConfiguration, Configuration exclusion) {
         if (classpathConfiguration == null) {
             return ClassPath.EMPTY;
         }
         for (ScriptClassPathInitializer initializer : initializers) {
             initializer.execute(classpathConfiguration);
         }
-        return DefaultClassPath.of(classpathConfiguration);
+
+        if (exclusion!=null) {
+            Set<File> exclusions = exclusion.getFiles();
+            return DefaultClassPath.of(classpathConfiguration).removeIf(file -> exclusions.contains(file));
+        } else {
+            return DefaultClassPath.of(classpathConfiguration);
+        }
     }
 }
