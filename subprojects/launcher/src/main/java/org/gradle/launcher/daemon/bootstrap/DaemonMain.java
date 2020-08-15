@@ -67,7 +67,7 @@ public class DaemonMain extends EntryPoint {
 
     @Override
     protected void doAction(String[] args, ExecutionListener listener) {
-        //The first argument is not really used but it is very useful in diagnosing, i.e. running 'jps -m'
+        // The first argument is not really used but it is very useful in diagnosing, i.e. running 'jps -m'
         if (args.length != 1) {
             invalidArgs("Following arguments are required: <gradle-version>");
         }
@@ -146,14 +146,11 @@ public class DaemonMain extends EntryPoint {
     }
 
     protected void daemonStarted(Long pid, String uid, Address address, File daemonLog) {
-        //directly printing to the stream to avoid log level filtering.
+        // directly printing to the stream to avoid log level filtering.
         new DaemonStartupCommunication().printDaemonStarted(originalOut, pid, uid, address, daemonLog);
         try {
             originalOut.close();
             originalErr.close();
-
-            //TODO - make this work on windows
-            //originalIn.close();
         } finally {
             originalOut = null;
             originalErr = null;
@@ -161,14 +158,19 @@ public class DaemonMain extends EntryPoint {
     }
 
     protected void initialiseLogging(LoggingManagerInternal loggingManager, File daemonLog) {
-        //create log file
+        // create log file
         PrintStream result;
         try {
             Files.createParentDirs(daemonLog);
             result = new PrintStream(new FileOutputStream(daemonLog), true);
-            java.nio.file.Files.setPosixFilePermissions(daemonLog.toPath(), Sets.newHashSet(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE));
         } catch (Exception e) {
             throw new RuntimeException("Unable to create daemon log file", e);
+        }
+
+        try {
+            java.nio.file.Files.setPosixFilePermissions(daemonLog.toPath(), Sets.newHashSet(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE));
+        } catch (Exception e) {
+            // ignore on unsupported filesystems
         }
 
         final PrintStream log = result;
@@ -176,21 +178,21 @@ public class DaemonMain extends EntryPoint {
         ShutdownHooks.addShutdownHook(new Runnable() {
             @Override
             public void run() {
-                //just in case we have a bug related to logging,
-                //printing some exit info directly to file:
+                // just in case we have a bug related to logging,
+                // printing some exit info directly to file:
                 log.println(DaemonMessages.DAEMON_VM_SHUTTING_DOWN);
             }
         });
 
-        //close all streams and redirect IO
+        // close all streams and redirect IO
         redirectOutputsAndInput(log);
 
-        //after redirecting we need to add the new std out/err to the renderer singleton
-        //so that logging gets its way to the daemon log:
+        // after redirecting we need to add the new std out/err to the renderer singleton
+        // so that logging gets its way to the daemon log:
         loggingManager.attachSystemOutAndErr();
 
-        //Making the daemon infrastructure log with DEBUG. This is only for the infrastructure!
-        //Each build request carries it's own log level and it is used during the execution of the build (see LogToClient)
+        // Making the daemon infrastructure log with DEBUG. This is only for the infrastructure!
+        // Each build request carries it's own log level and it is used during the execution of the build (see LogToClient)
         loggingManager.setLevelInternal(LogLevel.DEBUG);
 
         loggingManager.start();
@@ -199,7 +201,6 @@ public class DaemonMain extends EntryPoint {
     private void redirectOutputsAndInput(PrintStream printStream) {
         this.originalOut = System.out;
         this.originalErr = System.err;
-        //InputStream originalIn = System.in;
 
         System.setOut(printStream);
         System.setErr(printStream);
