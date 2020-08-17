@@ -67,9 +67,11 @@ class JavaCompileToolchainIntegrationTest extends AbstractPluginIntegrationTest 
     }
 
     def "can set explicit toolchain used by JavaCompile"() {
-        def someJdk = AvailableJavaHomes.getDifferentJdk()
+        def someJdk = AvailableJavaHomes.getJdk(JavaVersion.VERSION_14)
         buildFile << """
             apply plugin: "java"
+
+            println "Build running with " + org.gradle.internal.jvm.Jvm.current().javaVersion
 
             java {
                 toolchain {
@@ -84,6 +86,7 @@ class JavaCompileToolchainIntegrationTest extends AbstractPluginIntegrationTest 
         runWithToolchainConfigured(someJdk)
 
         then:
+        outputDoesNotContain("Compiling with Java command line compiler")
         outputContains("Compiling with toolchain '${someJdk.javaHome.absolutePath}'.")
         javaClassFile("Foo.class").exists()
     }

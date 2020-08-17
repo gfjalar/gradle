@@ -62,6 +62,7 @@ import org.gradle.internal.deprecation.DeprecationLogger;
 import org.gradle.internal.file.Deleter;
 import org.gradle.internal.jvm.DefaultModularitySpec;
 import org.gradle.internal.jvm.JavaModuleDetector;
+import org.gradle.internal.jvm.Jvm;
 import org.gradle.internal.operations.BuildOperationExecutor;
 import org.gradle.jvm.internal.toolchain.JavaToolChainInternal;
 import org.gradle.jvm.platform.JavaPlatform;
@@ -352,6 +353,8 @@ public class JavaCompile extends AbstractCompile implements HasCompileOptions {
             compileOptions.setFork(true);
             final JavaToolchain toolchain = ((DefaultToolchainJavaCompiler) javaCompiler.get()).getJavaToolchain();
             compileOptions.getForkOptions().setJavaHome(toolchain.getJavaHome());
+        } else {
+            compileOptions.getForkOptions().setJavaHome(Jvm.current().getJavaHome());
         }
         final DefaultJavaCompileSpec spec = new DefaultJavaCompileSpecFactory(compileOptions).create();
         spec.setDestinationDir(getDestinationDirectory().getAsFile().get());
