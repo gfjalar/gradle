@@ -41,6 +41,12 @@ class JUnitXmlTestExecutionResult implements TestExecutionResult {
 
     TestExecutionResult assertTestClassesExecuted(String... testClasses) {
         Map<String, File> classes = findClasses()
+        if (classes.keySet() != testClasses as Set) {
+            classes.each { name, file ->
+                println("$name: $file.text")
+                println()
+            }
+        }
         assertThat(classes.keySet(), equalTo(testClasses as Set))
         this
     }
