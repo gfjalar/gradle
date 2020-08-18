@@ -1,4 +1,4 @@
-rootProject.name = 'pluginManagement'
+rootProject.name = 'plugin-management'
 pluginManagement {
     plugins {
     }
