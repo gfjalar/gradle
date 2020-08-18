@@ -166,24 +166,12 @@ public class JUnitPlatformTestExecutionListener implements TestExecutionListener
             if (node.getType() == CONTAINER || isClass(node) && !hasSameSourceAsAncestor(node)) {
                 TestIdentifier classIdentifier = findClassSource(node);
                 String className = className(classIdentifier);
-                boolean hasDisplayNameAnnotation = hasDisplayNameAnnotation(classIdentifier);
-                String classDisplayName = hasDisplayNameAnnotation ? classDisplayName(classIdentifier) : innerClassName(classIdentifier).orElse(null);
+                String classDisplayName = classDisplayName(classIdentifier);
                 return new DefaultTestClassDescriptor(idGenerator.generateId(), className, classDisplayName);
             }
             return createTestDescriptor(node, node.getLegacyReportingName(), node.getDisplayName());
         });
         return wasCreated.get();
-    }
-
-    private static Optional<String> innerClassName(TestIdentifier classIdentifier) {
-        if (classIdentifier != null && isClass(classIdentifier)) {
-            ClassSource classSource = classSourceFor(classIdentifier);
-            Class<?> javaClass = classSource.getJavaClass();
-            if (javaClass != null && javaClass.getEnclosingClass() != null) {
-                return Optional.of(javaClass.getSimpleName());
-            }
-        }
-        return Optional.empty();
     }
 
     private TestDescriptorInternal createSyntheticTestDescriptorForContainer(TestIdentifier node) {
@@ -195,8 +183,7 @@ public class JUnitPlatformTestExecutionListener implements TestExecutionListener
     private TestDescriptorInternal createTestDescriptor(TestIdentifier test, String name, String displayName) {
         TestIdentifier classIdentifier = findClassSource(test);
         String className = className(classIdentifier);
-        boolean hasDisplayNameAnnotation = hasDisplayNameAnnotation(classIdentifier);
-        String classDisplayName = hasDisplayNameAnnotation ? classDisplayName(classIdentifier) : null;
+        String classDisplayName = classDisplayName(classIdentifier);
         return new DefaultTestDescriptor(idGenerator.generateId(), className, name, classDisplayName, displayName);
     }
 
@@ -246,14 +233,10 @@ public class JUnitPlatformTestExecutionListener implements TestExecutionListener
 
     private String className(TestIdentifier testClassIdentifier) {
         if (testClassIdentifier != null && isClass(testClassIdentifier)) {
-            return classSourceFor(testClassIdentifier).getClassName();
+            return ((ClassSource) testClassIdentifier.getSource().get()).getClassName();
         } else {
             return "UnknownClass";
         }
-    }
-
-    private static ClassSource classSourceFor(TestIdentifier testClassIdentifier) {
-        return (ClassSource) testClassIdentifier.getSource().get();
     }
 
     private String classDisplayName(TestIdentifier testClassIdentifier) {
@@ -264,16 +247,4 @@ public class JUnitPlatformTestExecutionListener implements TestExecutionListener
         }
     }
 
-    private boolean hasDisplayNameAnnotation(TestIdentifier testClassIdentifier) {
-        if (testClassIdentifier != null && isClass(testClassIdentifier)) {
-            Class<?> javaClass = (classSourceFor(testClassIdentifier)).getJavaClass();
-            Annotation[] annotations = javaClass.getAnnotations();
-            for (Annotation annotation : annotations) {
-                if (DISPLAY_NAME.equals(annotation.annotationType().getName())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 }
