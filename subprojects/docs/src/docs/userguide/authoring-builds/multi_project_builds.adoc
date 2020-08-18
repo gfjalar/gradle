@@ -469,7 +469,7 @@ include::{snippetsPath}/multiproject/dependencies-firstMessages/tests/multiproje
 ----
 ====
 
-This didn't quite do what we want. If nothing else is defined, Gradle executes the task in alphanumeric order. Therefore, Gradle will execute “`:consumer:action`” before “`:producer:action`”. Let's try to solve this with a hack and rename the producer project to “`aProducer`”.
+This didn't quite do what we want. If nothing else is defined, Gradle executes the task in alphanumeric order. Therefore, Gradle will execute “`:consumer:action`” before “`:producer:action`”. Let's try to solve this with a hack and rename the producer project to “`a-producer`”.
 
 .Dependencies and execution order
 ====
@@ -479,7 +479,7 @@ This didn't quite do what we want. If nothing else is defined, Gradle executes t
 [source, groovy]
 ----
 .
-├── aProducer
+├── a-producer
 │   └── build.gradle
 ├── build.gradle
 ├── consumer
@@ -493,7 +493,7 @@ This didn't quite do what we want. If nothing else is defined, Gradle executes t
 [source, kotlin]
 ----
 .
-├── aProducer
+├── a-producer
 │   └── build.gradle.kts
 ├── build.gradle.kts
 ├── consumer
@@ -504,8 +504,8 @@ This didn't quite do what we want. If nothing else is defined, Gradle executes t
 ====
 
 ====
-include::sample[dir="snippets/multiproject/dependencies-messagesHack/groovy",files="build.gradle[];settings.gradle[];consumer/build.gradle[];aProducer/build.gradle[]"]
-include::sample[dir="snippets/multiproject/dependencies-messagesHack/kotlin",files="build.gradle.kts[];settings.gradle.kts[];consumer/build.gradle.kts[];aProducer/build.gradle.kts[]"]
+include::sample[dir="snippets/multiproject/dependencies-messagesHack/groovy",files="build.gradle[];settings.gradle[];consumer/build.gradle[];a-producer/build.gradle[]"]
+include::sample[dir="snippets/multiproject/dependencies-messagesHack/kotlin",files="build.gradle.kts[];settings.gradle.kts[];consumer/build.gradle.kts[];a-producer/build.gradle.kts[]"]
 
 .Output of `gradle -q action`
 ----
