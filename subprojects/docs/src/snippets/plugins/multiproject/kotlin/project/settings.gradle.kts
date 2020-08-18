@@ -23,7 +23,7 @@ pluginManagement {
 // tag::include-subprojects[]
 include("helloA")
 include("helloB")
-include("goodbyeC")
+include("goodbye-c")
 // end::include-subprojects[]
 
 rootProject.name = "multiproject"
