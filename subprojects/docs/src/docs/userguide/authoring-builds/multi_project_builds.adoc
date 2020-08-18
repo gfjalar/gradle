@@ -45,7 +45,7 @@ Configuration on demand mode attempts to configure only projects that are releva
 * The project in the directory where the build is executed is also configured, but only when Gradle is executed without any tasks. This way the default tasks behave correctly when projects are configured on demand.
 * The standard project dependencies are supported and makes relevant projects configured. If project A has a compile dependency on project B then building A causes configuration of both projects.
 * The task dependencies declared via task path are supported and cause relevant projects to be configured. Example: `someTask.dependsOn(":someOtherProject:someOtherTask")`
-* A task requested via task path from the command line (or Tooling API) causes the relevant project to be configured. For example, building 'projectA:projectB:someTask' causes configuration of projectB.
+* A task requested via task path from the command line (or Tooling API) causes the relevant project to be configured. For example, building 'project-a:project-b:someTask' causes configuration of project-b.
 
 
 Eager to try out this new feature? To configure on demand with every build run see <<build_environment.adoc#sec:gradle_configuration_properties,Gradle properties>>. To configure on demand just for a given build, see <<command_line_interface.adoc#sec:command_line_performance,command-line performance-oriented options>>.
