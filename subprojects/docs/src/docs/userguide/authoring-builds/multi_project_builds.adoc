@@ -249,7 +249,7 @@ include::{snippetsPath}/multiproject/spreadSpecifics/tests/multiprojectSpreadSpe
 [[sub:project_filtering]]
 === Project filtering
 
-To show more of the power of configuration injection, let's add another project called `tropicalFish` and add more behavior to the build via the build script of the `water` project.
+To show more of the power of configuration injection, let's add another project called `tropicalfish` and add more behavior to the build via the build script of the `water` project.
 
 
 [[ssub:filtering_by_name]]
@@ -269,7 +269,7 @@ To show more of the power of configuration injection, let's add another project 
 ├── krill/
 │   └── build.gradle
 ├── settings.gradle
-└── tropicalFish/
+└── tropicalfish/
 ----
 =====
 [.multi-language-sample]
@@ -284,7 +284,7 @@ To show more of the power of configuration injection, let's add another project 
 ├── krill/
 │   └── build.gradle.kts
 ├── settings.gradle.kts
-└── tropicalFish/
+└── tropicalfish/
 ----
 =====
 ====
@@ -322,7 +322,7 @@ Using the project name for filtering is one option. Using <<writing_build_script
 ├── krill
 │   └── build.gradle
 ├── settings.gradle
-└── tropicalFish
+└── tropicalfish
     └── build.gradle
 ----
 =====
@@ -338,7 +338,7 @@ Using the project name for filtering is one option. Using <<writing_build_script
 ├── krill
 │   └── build.gradle.kts
 ├── settings.gradle.kts
-└── tropicalFish
+└── tropicalfish
     └── build.gradle.kts
 ----
 =====
@@ -346,8 +346,8 @@ Using the project name for filtering is one option. Using <<writing_build_script
 
 
 ====
-include::sample[dir="snippets/multiproject/tropicalWithProperties/groovy",files="settings.gradle[];bluewhale/build.gradle[];krill/build.gradle[];build.gradle[];tropicalFish/build.gradle[]"]
-include::sample[dir="snippets/multiproject/tropicalWithProperties/kotlin",files="settings.gradle.kts[];bluewhale/build.gradle.kts[];krill/build.gradle.kts[];build.gradle.kts[];tropicalFish/build.gradle.kts[]"]
+include::sample[dir="snippets/multiproject/tropicalWithProperties/groovy",files="settings.gradle[];bluewhale/build.gradle[];krill/build.gradle[];build.gradle[];tropicalfish/build.gradle[]"]
+include::sample[dir="snippets/multiproject/tropicalWithProperties/kotlin",files="settings.gradle.kts[];bluewhale/build.gradle.kts[];krill/build.gradle.kts[];build.gradle.kts[];tropicalfish/build.gradle.kts[]"]
 
 .Output of `gradle -q hello`
 ----
@@ -391,7 +391,7 @@ include::{snippetsPath}/multiproject/partialTasks/tests/multiprojectPartialTasks
 ----
 ====
 
-The build is executed from the `water` project. Neither `water` nor `tropicalFish` have a task with the name `distanceToIceberg`. Gradle does not care. The simple rule mentioned already above is: Execute all tasks down the hierarchy which have this name. Only complain if there is _no_ such task!
+The build is executed from the `water` project. Neither `water` nor `tropicalfish` have a task with the name `distanceToIceberg`. Gradle does not care. The simple rule mentioned already above is: Execute all tasks down the hierarchy which have this name. Only complain if there is _no_ such task!
 
 [[sec:running_partial_build_from_the_root]]
 == Running tasks by their absolute path
@@ -404,7 +404,7 @@ As we have seen, you can run a multi-project build by entering any subproject di
 include::{snippetsPath}/multiproject/tropicalWithProperties/tests-common/multiprojectAbsoluteTaskPaths.out[]
 ----
 
-The build is executed from the `tropicalFish` project. We execute the `hello` tasks of the `water`, the `krill` and the `tropicalFish` project. The first two tasks are specified by their absolute path, the last task is executed using the name matching mechanism described above.
+The build is executed from the `tropicalfish` project. We execute the `hello` tasks of the `water`, the `krill` and the `tropicalfish` project. The first two tasks are specified by their absolute path, the last task is executed using the name matching mechanism described above.
 
 [[sec:project_and_task_paths]]
 == Project and task paths
@@ -634,7 +634,7 @@ What if one project needs the jar produced by another project in its compile pat
 │                       └── PersonTest.java
 ├── build.gradle
 ├── services
-│   └── personService
+│   └── person-service
 │       └── src
 │           ├── main
 │           │   └── java
@@ -686,7 +686,7 @@ What if one project needs the jar produced by another project in its compile pat
 │                       └── PersonTest.java
 ├── build.gradle.kts
 ├── services
-│   └── personService
+│   └── person-service
 │       └── src
 │           ├── main
 │           │   └── java
@@ -717,7 +717,7 @@ What if one project needs the jar produced by another project in its compile pat
 ====
 
 
-We have the projects “`shared`”, “`api`” and “`personService`”. The “`personService`” project has a lib dependency on the other two projects. The “`api`” project has a lib dependency on the “`shared`” project.
+We have the projects “`shared`”, “`api`” and “`person-service`”. The “`person-service`” project has a lib dependency on the other two projects. The “`api`” project has a lib dependency on the “`shared`” project.
 “`services`” is also a project, but we use it just as a container. It has no build script and gets nothing injected by another build script. We use the `:` separator to define a project path. Consult the DSL documentation of link:{groovyDslPath}++/org.gradle.api.initialization.Settings.html#org.gradle.api.initialization.Settings:include(java.lang.String[])++[Settings.include(java.lang.String[\])] for more information about defining project paths.
 
 [[javadependencies_2]]
