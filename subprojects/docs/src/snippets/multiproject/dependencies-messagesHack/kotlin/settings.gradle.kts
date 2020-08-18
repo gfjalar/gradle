@@ -1,2 +1,2 @@
-rootProject.name = "dependencies-messagesHack"
-include("consumer", "aProducer")
+rootProject.name = "dependencies-messages-hack"
+include("consumer", "a-producer")
