@@ -32,7 +32,6 @@ import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
-import java.lang.annotation.Annotation;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Optional;
